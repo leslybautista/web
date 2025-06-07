@@ -37,7 +37,7 @@
      font-weight: 700;
      color: white;
      text-decoration: none;
-     background: linear-gradient(45deg, #756e91, #ac4f3b);
+     background: linear-gradient(90deg, #5e3ea1 0%, #5e3ea1 20%, #ac4f3b 100%);
      -webkit-background-clip: text;
      -webkit-text-fill-color: transparent;
      background-clip: text;
@@ -65,7 +65,7 @@
  }
 
  .nav-link.active {
-     background: linear-gradient(45deg,#756e91, #ac4f3b);
+     background: linear-gradient(90deg, #5e3ea1 0%, #5e3ea1 20%, #ac4f3b 100%);
      color: white;
  }
 
@@ -83,9 +83,12 @@
      height: 100vh;
     background-image: url('media/front3.jpg');
     background-repeat: no-repeat;
+    background-size: cover;        
+    background-position: center;   
+    background-attachment: fixed;
     display: flex;
      align-items: center;
-     justify-content: fkex-start;
+     justify-content: flex-start;
      text-align: left;
      color: white;
      position: relative;
@@ -96,6 +99,16 @@
      font-size: 65px;
      font-weight: 700;
      margin-bottom: 1rem;
+     margin-left: 2rem;
+     background: linear-gradient(45deg, #fff, #f0f0f0);
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent;
+     background-clip: text;
+ }
+ .hero-content h2 {
+     font-size: 55px;
+     font-weight: 700;
+     margin-bottom: 0rem;
      margin-left: 2rem;
      background: linear-gradient(45deg, #fff, #f0f0f0);
      -webkit-background-clip: text;
@@ -169,7 +182,7 @@
      left: 0;
      right: 0;
      height: 4px;
-     background: linear-gradient(45deg, #667eea, #764ba2);
+     background: linear-gradient(90deg, #5e3ea1 0%, #5e3ea1 20%, #ac4f3b 100%);
  }
 
  .concept-card:hover {
@@ -233,7 +246,7 @@
 
  /* Stats Section */
  .stats-section {
-     background: linear-gradient(135deg, #002e74, #667eea);
+     background: linear-gradient(90deg, #5e3ea1 0%, #5e3ea1 20%, #ac4f3b 100%);
      color: white;
      text-align: center;
  }
@@ -265,7 +278,7 @@
  .map-placeholder {
      width: 100%;
      height: 400px;
-     background: linear-gradient(45deg, #667eea, #764ba2);
+     background: linear-gradient(90deg, #5e3ea1 0%, #5e3ea1 20%, #ac4f3b 100%);
      border-radius: 15px;
      display: flex;
      align-items: center;
