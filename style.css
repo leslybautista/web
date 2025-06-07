@@ -82,6 +82,7 @@
  .hero {
      height: 100vh;
     background-image: url('media/front3.jpg');
+    background-repeat: no-repeat;
     display: flex;
      align-items: center;
      justify-content: fkex-start;
@@ -115,7 +116,7 @@
      display: inline-block;
      margin-left: 2rem;
      padding: 1rem 2rem;
-     background: linear-gradient(90deg, #5e3ea1 0%, #5e3ea1 30%, #ac4f3b 100%);
+     background: linear-gradient(90deg, #5e3ea1 0%, #5e3ea1 20%, #ac4f3b 100%);
      color: white;
      text-decoration: none;
      border-radius: 50px;
