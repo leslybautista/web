@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Democracy Storymap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Helvetica Neue", sans-serif;
+      height: 100%;
+      color: #e7e7e7;
+
+      overflow: hidden;
+    }
+
+    #map {
+      position: fixed;
+      top: 55px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .story-container {
+      margin-top: 20px;
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      width: 45%;
+      max-width: 700px;
+      background: rgba(0, 0, 0, 0.9);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .slide {
+      display: none;
+      flex-direction: column;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    .slide h1 {
+    margin-top: 0;
+    font-size: 60px;
+    color: #f1f1f1;
+  }
+
+    .slide h2 {
+      margin-top: 0;
+      font-size: 2rem;
+      color: #f1f1f1;
+    }
+
+    .slide p {
+      color: #f1f1f1;
+      line-height: 1.6;
+    }
+
+    .legend {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      z-index: 3;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+      color: black;
+      z-index: 5;
+    }
+
+    .color-box {
+      width: 15px;
+      height: 15px;
+      margin-right: 8px;
+      display: inline-block;
+    }
+
+    .liberal {
+      background-color: #756e91;
+    }
+
+    .electoral-democracy {
+      background-color: #b0b1cb;
+    }
+
+    .ed-lower-bound {
+      background-color: #E4E1ED;
+    }
+
+    .ea-upper-bound {
+      background-color: #D7BDA0;
+    }
+
+    .electoral-autocracy {
+      background-color: #bd7262;
+    }
+
+    .closed-autocracy {
+      background-color: #ac4f3b;
+    }
+
+    @media (max-width: 768px) {
+      .story-container {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="#" class="logo">Democratization vs. Autocratization</a>
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="overview.html" class="nav-link">Overview</a></li>
+        <li><a href="europe.html" class="nav-link">Europe</a></li>
+        <li><a href="north.html" class="nav-link">North America</a></li>
+        <li><a href="south.html" class="nav-link">South America</a></li>
+        <li><a href="asia.html" class="nav-link active">Asia</a></li>
+        <li><a href="africa.html" class="nav-link">Africa</a></li>
+        <li><a href="map.html" class="nav-link">Map</a></li>
+        </ul>
+        <button class="mobile-menu-toggle">☰</button>
+  </div>
+</nav>
+<div id="map"></div>
+
+<div class="story-container" id="story">
+
+<!-- Asia -->
+  <div class="slide active" data-country="Global">
+    <h1>Asia Overview</h1>
+    <p>
+      The Democracy Report 2025 reveals a troubling trend of widespread autocratization across Asia, especially when considering population size. In East Asia and the Pacific, while some smaller countries like Fiji and Thailand show signs of democratization, the region’s overall trajectory is dominated by populous countries descending into or remaining in autocratic rule—such as China, Indonesia, and Myanmar. A staggering 89% of the population in this region lives under autocratic regimes, with just 7% in liberal democracies. Similarly, **South and Central Asia** has regressed to democracy levels not seen since 1975, largely due to India's ongoing decline into electoral autocracy. Today, 93% of people in this region live under electoral autocracies, while only 3% enjoy electoral democracy, with small improvements noted in countries like Sri Lanka and the Maldives.
+      In the Middle East and North Africa (MENA), democracy remains weakest globally, with 98% of the population living in autocracies. The region continues to experience a gradual decline, with only Tunisia showing minor democratic recovery. Autocratization is the dominant political pattern in Asia, especially in its most populous countries, signaling a significant erosion of democratic institutions, rights, and freedoms across the continent. While a few countries are progressing, they remain outliers in a broader landscape of shrinking democratic space.
+      <br>
+      <br>Source: <a href="https://www.v-dem.net/documents/54/v-dem_dr_2025_lowres_v1.pdf" target="_blank">Nord, Marina, et al. Democracy Report 2025: 25 Years of Autocratization – Democracy Trumped? V‑Dem Institute, University of Gothenburg, Mar. 2025. PDF file.</a>
+    </p>
+  </div>
+  <!-- South and Central Asia -->
+  <div class="slide" data-country="Southcentral-Asia">
+    <h1>South and Central Asia</h1>
+    <p>
+      South and Central Asia is undergoing a steep and sustained decline in democracy, with population-weighted scores falling back to levels last seen in 1975. It is now the second most autocratic region in the world, surpassed only by the Middle East and North Africa. This decline is driven primarily by India, home to 1.4 billion people, which was classified as an electoral autocracy in 2019—a status that has remained consistent in V-Dem data since then. Other populous countries contributing to the region's autocratization include Afghanistan, Bangladesh, and Pakistan. As of 2024, six countries—Afghanistan, Bangladesh, India, Kyrgyzstan, Mongolia, and Pakistan—are in the process of autocratization. A staggering 93% of the region’s population lives in electoral autocracies, while another 4% reside in closed autocracies such as Afghanistan, Turkmenistan, and Uzbekistan. Only 3% live in electoral democracies like the Maldives, Nepal, and Sri Lanka. Notably, the Maldives and Sri Lanka are the only countries in the region currently undergoing democratic improvement.
+      <br>
+      <br>Source: <a href="https://www.v-dem.net/documents/54/v-dem_dr_2025_lowres_v1.pdf" target="_blank">Nord, Marina, et al. Democracy Report 2025: 25 Years of Autocratization – Democracy Trumped? V‑Dem Institute, University of Gothenburg, Mar. 2025. PDF file.</a>
+    </p>
+  </div>
+  <div class="slide" data-country="Kazakhstan">
+    <h2>Kazakhstan</h2>
+    <p>
+      Kazakhstan stands as the region's most economically advanced nation, largely due to its vast oil and gas reserves. This economic prosperity, however, has not translated into substantial political liberalization. Under former President Nursultan Nazarbayev, power was heavily centralized, limiting political competition and transparency. The social contract promising stability and improved living conditions in exchange for political compliance began to erode as economic benefits failed to reach all segments of society.
+      Between 2019 and 2022, widespread protests highlighted public frustrations over rising inequality and unmet social promises. In response, President Kassym-Jomart Tokayev introduced a reform program in March 2022 under the banner of a "New Kazakhstan." These reforms aimed to liberalize the party system, implement electoral changes, and limit presidential powers. Critics argue, however, that these measures primarily sought to quell public discontent rather than address systemic issues like corruption and socio-economic inequalities. While steps toward economic diversification, such as investments in renewable energy and technology, are promising, the economy's reliance on energy exports and entrenched elite networks remain significant barriers to democratization.
+      <br>
+      <br>Source: <a href="https://kingsthinktankspectrum.wordpress.com/2025/02/07/democratisation-in-central-asia-challenges-and-prospects/" target="_blank">Democratisation in Central Asia: Challenges and Prospects. King’s Think Tank Spectrum, 7 Feb. 2025</a>
+    </p>
+  </div>
+  <div class="slide" data-country="Uzbekistan">
+    <h2>Uzbekistan</h2>
+    <p>
+      Following the death of long-standing authoritarian leader Islam Karimov in 2016, President Shavkat Mirziyoyev initiated significant political and economic reforms. Efforts to liberalize the economy, strengthen the rule of law, promote civil society, and improve social protection systems have garnered international attention. Initiatives to reduce bureaucratic barriers for foreign investors and enhance governance through anti-corruption measures present potential prospects for democratization.
+      Despite these reforms, Uzbekistan's political system remains highly centralized. The ruling party dominates, opposition parties are marginalized, and media freedoms are constrained. While the government's reformist rhetoric signals a departure from past authoritarian practices, substantial challenges persist in establishing a more open and participatory political environment.
+      <br>
+      <br>Source: <a href="https://kingsthinktankspectrum.wordpress.com/2025/02/07/democratisation-in-central-asia-challenges-and-prospects/" target="_blank">Democratisation in Central Asia: Challenges and Prospects. King’s Think Tank Spectrum, 7 Feb. 2025</a>
+    </p>
+  </div>
+  <div class="slide" data-country="Turkmenistan">
+    <h2>Turkmenistan</h2>
+    <p>
+      Turkmenistan continues to exhibit deep-seated authoritarian rule, with limited political pluralism and restricted civil liberties. The government maintains tight control over all aspects of political life, including the media and civil society. Independent political activity is virtually nonexistent, and state propaganda dominates the information landscape. The leadership prioritizes regime stability and loyalty over any form of political liberalization, leaving little room for democratic development.
+      <br>
+      <br>Source: <a href="https://kingsthinktankspectrum.wordpress.com/2025/02/07/democratisation-in-central-asia-challenges-and-prospects/" target="_blank">Democratisation in Central Asia: Challenges and Prospects. King’s Think Tank Spectrum, 7 Feb. 2025</a>
+    </p>
+  </div>
+  <div class="slide" data-country="Tajikistan">
+    <h2>Tajikistan</h2>
+    <p>
+      Tajikistan operates under a highly authoritarian political environment marked by the systematic suppression of dissent and the marginalization of opposition voices. The government uses legal and extralegal means to silence critics, restrict media freedom, and maintain control over political discourse. Like Turkmenistan, the regime shows little willingness to embrace democratic reforms, instead focusing on consolidating power and minimizing threats to its authority.
+      <br>
+      <br>Source: <a href="https://kingsthinktankspectrum.wordpress.com/2025/02/07/democratisation-in-central-asia-challenges-and-prospects/" target="_blank">Democratisation in Central Asia: Challenges and Prospects. King’s Think Tank Spectrum, 7 Feb. 2025</a>
+    </p>
+  </div>
+  <div class="slide" data-country="Pakistan">
+    <h2>Pakistan</h2>
+    <p>
+      In Pakistan, the interplay between civilian governments and the military establishment has complicated democratic consolidation. While elections are held regularly, the military's influence over political affairs has often undermined civilian authority. This dynamic has led to a fragile democratic environment, where elected leaders operate under the shadow of military oversight.
+      <br>
+      <br>Source: <a href="https://moderndiplomacy.eu/2024/10/13/democratic-backlash-in-south-asia/" target="_blank">Democratic Backlash in South Asia. Modern Diplomacy, 13 Oct. 2024</a>
+      and <a href="https://www.lowyinstitute.org/the-interpreter/democracy-struggling-south-asia" target="_blank">Democracy Is Struggling in South Asia. The Interpreter, Lowy Institute, 2025</a>
+    </p>
+  </div>
+  <div class="slide" data-country="India">
+    <h2>India</h2>
+    <p>
+      India, often celebrated as the world’s largest democracy, is facing growing concerns about the strength and resilience of its democratic institutions. In recent years, the political climate has become increasingly restrictive for dissenting voices. Journalists, activists, and opposition figures have reported heightened government scrutiny, with laws such as sedition and criminal defamation frequently used against critics. Media organizations that challenge official narratives risk pressure through regulatory bodies, funding obstacles, or legal action. These trends have led many observers to argue that democratic checks and balances are weakening, with an executive branch that appears less tolerant of opposition and public criticism. Independent global watchdogs have also noted these patterns, citing a decline in civil liberties and political rights as evidence of democratic backsliding.
+      <br>
+      <br>Source: <a href="https://moderndiplomacy.eu/2024/10/13/democratic-backlash-in-south-asia/" target="_blank">Democratic Backlash in South Asia. Modern Diplomacy, 13 Oct. 2024</a>
+      and <a href="https://www.lowyinstitute.org/the-interpreter/democracy-struggling-south-asia" target="_blank">Democracy Is Struggling in South Asia. The Interpreter, Lowy Institute, 2025</a>
+    </p>
+  </div>
+  <div class="slide" data-country="Bangladesh">
+    <h2>Bangladesh</h2>
+    <p>
+      Bangladesh's democratic trajectory has been marred by allegations of electoral manipulation and suppression of opposition voices. The ruling party's dominance has been reinforced through controversial elections, leading to questions about the legitimacy of the democratic process. Civil society actors and journalists have faced increasing restrictions, further constraining the space for democratic discourse.
+      <br>
+      <br>Source: <a href="https://moderndiplomacy.eu/2024/10/13/democratic-backlash-in-south-asia/" target="_blank">Democratic Backlash in South Asia. Modern Diplomacy, 13 Oct. 2024</a>
+      and <a href="https://www.lowyinstitute.org/the-interpreter/democracy-struggling-south-asia" target="_blank">Democracy Is Struggling in South Asia. The Interpreter, Lowy Institute, 2025</a>
+    </p>
+  </div>
+  <div class="slide" data-country="Sri Lanka">
+    <h2>Sri Lanka</h2>
+    <p>
+      Sri Lanka's democratic institutions have faced significant stress amid political crises and economic challenges. The concentration of power in the executive branch and the marginalization of minority communities have raised alarms about the country's commitment to democratic principles. Recent protests and public dissent reflect a growing demand for accountable governance and institutional reforms.
+      <br>
+      <br>Source: <a href="https://moderndiplomacy.eu/2024/10/13/democratic-backlash-in-south-asia/" target="_blank">Democratic Backlash in South Asia. Modern Diplomacy, 13 Oct. 2024</a>
+      and <a href="https://www.lowyinstitute.org/the-interpreter/democracy-struggling-south-asia" target="_blank">Democracy Is Struggling in South Asia. The Interpreter, Lowy Institute, 2025</a>
+    </p>
+  </div>
+
+<!-- Southeast-Asia -->
+  <div class="slide" data-country="Southeast-Asia">
+    <h1>Southeast Asia</h1>
+    <p>
+      Southeast Asia's political landscape is marked by diverse governance systems shaped by historical and ideological factors. While the post-Cold War "third wave of democratization" brought political stability and democratic reforms to countries like the Philippines, Indonesia, Malaysia, and Thailand, the region now faces significant challenges. Democratic backsliding is evident through the resurgence of oligarchic power, entrenched political machines, and repeated military interventions, particularly in Thailand. A legitimacy crisis plagues many democracies due to economic underperformance, rising inequality, misinformation, and the growing influence of both domestic and external authoritarian forces. These issues have eroded public trust in liberal democracy and fueled the rise of populism and illiberalism.
+      Despite these challenges, opportunities for democratic reform remain, particularly through the efforts of think tanks. These institutions play a vital role in promoting transparency, policy innovation, and youth engagement—especially in authoritarian or fragile democratic settings. They can serve as catalysts for change by fostering public debate and holding governments accountable. Cambodia exemplifies the region's complex democratic trajectory, currently undergoing a controlled political transition following Hun Sen’s handover of power to his son, Hun Manet. The transition's success and legitimacy hinge on addressing economic issues and governance reform. Nonetheless, Cambodia also presents opportunities for broader economic diversification and institutional strengthening that could support a more genuine democratic shift.
+      <br>
+      <br>Source: <a href="https://www.cipe.org/wp-content/uploads/2024/12/State-of-Democracy-Articles-2024.pdf" target="_blank">State of Democracy Articles 2024. Center for International Private Enterprise, Dec. 2024, PDF file.</a>
+    </p>
+  </div>
+    <div class="slide" data-country="Indonesia">
+    <h2>Indonesia</h2>
+    <p>
+      Indonesia is considered to have been experiencing significant democratic backsliding over the last nine years, with democracy viewed as under serious threat since the 2014 election. Essential democratic pillars like civil liberties and anti-corruption efforts have been systematically weakened.
+      The 2024 Presidential and Legislative elections were successfully implemented safely and peacefully with high voter participation, lacking the major polarization seen in 2019. However, the election was marked by controversies and accusations of electoral fraud, voter manipulation, nepotism, and the misuse of state institutions and public funds to support the winning campaign. These accusations, though dismissed in court due to insufficient evidence, highlight growing distrust in democratic institutions.
+      The election of Prabowo Subianto is seen as a stress test for Indonesia's democracy. Concerns exist regarding his "strongman appeal," a potentially tipped playing field, his ties to the oligarchy, human rights record, and disregard for democratic principles. Prabowo's presidency has the potential for significant political-economic changes. His controversial history may lead to heightened scrutiny of Indonesia's human rights record. Economically, his presidency could usher in a period of protectionism and economic nationalism, which carries risks for foreign investment. Balancing development with environmental sustainability and managing international relations will be crucial.
+      <br>
+      <br>Source: <a href="https://www.cipe.org/wp-content/uploads/2024/12/State-of-Democracy-Articles-2024.pdf" target="_blank">State of Democracy Articles 2024. Center for International Private Enterprise, Dec. 2024, PDF file.</a>
+    </p>
+  </div>
+  <div class="slide" data-country="Malaysia">
+    <h2>Malaysia</h2>
+    <p>
+      Malaysia is currently experiencing a period of relative political stability after a turbulent period with four prime ministers in four years. A "coalition of coalitions" formed a unity government after the 2022 election. The government is undertaking unpopular but necessary fiscal reforms.
+      While democracy appears generally on the uptick, an unease permeates society. A key challenge is the slow pace of institutional reforms. Important initiatives like amendments to the Whistleblower Protection Act, enacting a Freedom of Information Act, and separating the roles of the Attorney General and Public Prosecutor have been delayed. There are also governance gaps in political financing and asset declaration. Government priorities appear focused on retaining support from the Malay majority, potentially at the expense of institutional reforms. Boundaries are being set for media freedom concerning sensitive topics. Suspicion and misgivings between ethnic communities are problematic for economic reform.
+      Opportunities exist for market reform, leveraged by the government's concern for international reputation and attracting foreign investment. Scrutinizing state-linked companies could increase competitiveness. The current period of relative stability and economic recovery is considered a prime time for addressing systemic failures and structural reforms. The case of Malaysia highlights that the democratization process is complex, convoluted, and fragile. Strengthening institutions, consistent reforms, and strong community ties are essential.
+      <br>
+      <br>Source: <a href="https://www.cipe.org/wp-content/uploads/2024/12/State-of-Democracy-Articles-2024.pdf" target="_blank">State of Democracy Articles 2024. Center for International Private Enterprise, Dec. 2024, PDF file.</a>
+    </p>
+  </div>
+  <div class="slide" data-country="Philippines">
+    <h2>Philippines</h2>
+    <p>
+      The political economy and democratic governance in the Philippines have been highly dynamic. The country saw a shift from rekindled liberalism under Aquino III to growing illiberalism under Duterte. The current administration under Marcos Jr. appears committed to countering Duterte's style, and democratic backsliding is remarkably being challenged by his leadership.
+      Despite reversing authoritarian tendencies, the government needs to perform better in combating corruption, which remains a significant obstacle to long-term development and a top concern for Filipinos. The Philippines showed a decline in the 2023 Corruption Perceptions Index's rule of law ranking.
+      The economy has shown resilience and growth, with reforms aimed at improving the entrepreneurial environment. However, institutional challenges persist, and factors hindering foreign investment include complicated rules, policy changes, restrictive foreign ownership rules, and public sector corruption. Addressing corruption and bureaucratic red tape is imperative for the success and sustainability of initiatives aimed at attracting investment. Good governance, adherence to the rule of law, promoting democratic practices and economic freedom, and collaborative leadership are essential for economic growth and democratic progression. The future of democracy in Philippine society is seen as bright, with an expected continued reversal of authoritarian tendencies and the flourishing of a sustainable, competitive, and freer market economy.
+      <br>
+      <br>Source: <a href="https://www.cipe.org/wp-content/uploads/2024/12/State-of-Democracy-Articles-2024.pdf" target="_blank">State of Democracy Articles 2024. Center for International Private Enterprise, Dec. 2024, PDF file.</a>
+    </p>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="color-box liberal"></span> Liberal democracy</div>
+  <div class="legend-item"><span class="color-box electoral-democracy"></span> Electoral democracy</div>
+  <div class="legend-item"><span class="color-box ed-lower-bound"></span> Electoral dem. Lower Bound</div>
+  <div class="legend-item"><span class="color-box ea-upper-bound"></span> Electoral Aut. Upper Bound</div>
+  <div class="legend-item"><span class="color-box electoral-autocracy"></span> Electoral autocracy</div>
+  <div class="legend-item"><span class="color-box closed-autocracy"></span> Closed autocracy</div>
+</div>
+
+<script>
+const map = new maplibregl.Map({
+  container: 'map',
+  style: {
+    version: 8,
+    sources: {},
+    layers: []
+  },
+  center: [100.7661, 6.4582],    // center on Southeast Asia
+  zoom: 3.5              // zoom level showing Southeast Asia
+});
+const southeastAsiaBBox = [[88.594382881345, -12.375471986864, 152.93774260658, 31.291864723093]]; // [west, south, east, north]
+
+
+// Add zoom and rotation controls to the map.
+map.addControl(new maplibregl.NavigationControl({
+    visualizePitch: true,
+    visualizeRoll: true,
+    showZoom: true,
+    showCompass: true
+}));
+
+let geoData = null;
+let currentIndex = 0;
+const slides = document.querySelectorAll('.slide');
+
+map.on('load', () => {
+  fetch('data/democracy.geojson')
+    .then(res => res.json())
+    .then(data => {
+      geoData = data;
+
+      map.addSource('democracy', {
+        type: 'geojson',
+        data: geoData
+      });
+
+      map.addLayer({
+        id: 'country-fill',
+        type: 'fill',
+        source: 'democracy',
+        paint: {
+          'fill-color': [
+            'match', ['get', 'Democracy_'],
+            'LD', '#756e91',
+            'LD-', '#756e91',
+            'ED', '#b0b1cb',
+            'ED+', '#b0b1cb',
+            'ED-', '#E4E1ED',
+            'EA+', '#D7BDA0',
+            'EA', '#bd7262',
+            'CA', '#ac4f3b',
+            '#cccccc'
+          ],
+          'fill-opacity': 0.9
+        }
+      });
+
+      map.addLayer({
+        id: 'country-border',
+        type: 'line',
+        source: 'democracy',
+        paint: {
+          'line-color': '#555',
+          'line-width': 1
+        }
+      });
+
+      map.addLayer({
+        id: 'highlight',
+        type: 'line',
+        source: 'democracy',
+        paint: {
+          'line-color': '#000000',
+          'line-width': 4
+        },
+        filter: ['==', 'COUNTRY', '']
+      });
+
+      updateSlide(0);
+    });
+});
+
+
+function updateSlide(index) {
+  if (!geoData || index < 0 || index >= slides.length) return;
+
+  slides.forEach((slide, i) => {
+    slide.classList.toggle('active', i === index);
+  });
+
+  const country = slides[index].dataset.country;
+  currentIndex = index;
+
+  const containerWidth = document.getElementById('story').clientWidth;
+  const offsetX = containerWidth / 4;
+  const offsetY = 0;
+
+  // Zoom slide
+  if (country === "Global") {
+    // Zoom to Asia 
+    const asiaBBox = [60, -15, 150, 55]; // [west, south, east, north] Asia
+    
+    map.setFilter('highlight', ['==', 'COUNTRY', '']);
+    map.fitBounds(asiaBBox, {
+      padding: 50,
+      maxZoom: 3,
+      duration: 1500,
+      offset: [offsetX, offsetY]
+    });
+    
+  } else if (country === "Southeast-Asia") {
+    // Zoom to Southeast Asia
+    const southeastAsiaBBox = [88.594382881345, -12.375471986864, 152.93774260658, 31.291864723093];
+    
+    map.setFilter('highlight', ['==', 'COUNTRY', '']);
+    map.fitBounds(southeastAsiaBBox, {
+      padding: 80,
+      maxZoom: 5,
+      duration: 1500,
+      offset: [offsetX, offsetY]
+    });
+
+  } else if (country === "Southcentral-Asia") {
+  // Zoom to South and Central Asia
+  const southcentralAsiaBBox = [46.47, 4.6, 98.3, 55.39];
+  
+  map.setFilter('highlight', ['==', 'COUNTRY', '']);
+  map.fitBounds(southcentralAsiaBBox, {
+    padding: 80,
+    maxZoom: 5,
+    duration: 1500,
+    offset: [offsetX, offsetY]
+  });
+    
+  } else {
+    // Zoom to every country
+    map.setFilter('highlight', ['==', 'COUNTRY', country]);
+
+    const feature = geoData.features.find(f => f.properties.COUNTRY === country);
+    if (!feature || !feature.geometry) {
+      console.warn("Country not found in geoData:", country);
+      return;
+    }
+
+    try {
+      const bbox = turf.bbox(feature);
+
+      map.fitBounds(bbox, {
+        padding: 300,
+        maxZoom: 6,
+        duration: 1200,
+        offset: [offsetX, offsetY]
+      });
+    } catch (err) {
+      console.warn('Could not fly to', country, err);
+    }
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    updateSlide(currentIndex + 1);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    updateSlide(currentIndex - 1);
+  }
+});
+</script>
+</body>
+</html>
