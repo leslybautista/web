@@ -29,11 +29,11 @@
      display: flex;
      justify-content: space-between;
      align-items: center;
-     padding: 1rem 2rem;
+     padding: 1rem 0.5rem;
  }
 
  .logo {
-     font-size: 1rem;
+     font-size: 0.9rem;
      font-weight: 700;
      color: white;
      text-decoration: none;
@@ -46,17 +46,19 @@
  .nav-menu {
      display: flex;
      list-style: none;
-     gap: 2rem;
+     gap: 1.5rem;
  }
 
  .nav-link {
      color: white;
      text-decoration: none;
+     font-size: 0.85rem;
      font-weight: 500;
      padding: 0.5rem 1rem;
      border-radius: 8px;
      transition: all 0.3s ease;
      position: relative;
+     white-space: nowrap;
  }
 
  .nav-link:hover {
@@ -85,7 +87,7 @@
     background-repeat: no-repeat;
     background-size: cover;        
     background-position: center;   
-    background-attachment: fixed;
+    
     display: flex;
      align-items: center;
      justify-content: flex-start;
@@ -150,6 +152,7 @@
      margin: 0 auto;
  }
 
+
  .section h2 {
      font-size: 2.5rem;
      text-align: center;
@@ -203,11 +206,23 @@
 
  /* Feature Cards */
  .feature-grid {
-     display: grid;
-     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-     gap: 2rem;
-     margin-top: 3rem;
- }
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Centra las últimas 2 tarjetas ocupando las columnas 1 y 3 */
+.feature-card:nth-child(4) {
+    grid-column: 1; /* Columna 1 */
+}
+
+.feature-card:nth-child(5) {
+    grid-column: 3; /* Columna 3, dejando la columna 2 vacía */
+}
 
  .feature-card {
      background: white;
@@ -250,6 +265,9 @@
      color: white;
      text-align: center;
  }
+ .stats-section h2{
+    color: #fff;
+ }
 
  .stats-grid {
      display: grid;
@@ -261,7 +279,7 @@
  .stat-item h3 {
      font-size: 3rem;
      margin-bottom: 0.5rem;
-     color: #fff;
+     color: #061a87;
  }
 
  .stat-item p {
@@ -288,35 +306,33 @@
      margin-top: 2rem;
  }
 
- /* Footer */
+  /* Footer */
  .footer {
      background: #002e74;
-     color: white;
+     color: rgb(232, 231, 231);
      text-align: center;
-     padding: 3rem 2rem 2rem;
+     padding: 1rem 1rem;
  }
 
  .footer-content {
      max-width: 1200px;
-     margin: 0 auto;
+     margin: 0;
+    font-size: 12px;    
  }
 
- .footer-links {
-     display: flex;
-     justify-content: center;
-     gap: 2rem;
-     margin-bottom: 2rem;
- }
-
- .footer-links a {
+ .footer-content a {
      color: white;
      text-decoration: none;
+     font-family: 'Franklin Gothic Medium';
+     font-weight: bold;
      transition: color 0.3s ease;
+  
  }
 
- .footer-links a:hover {
-     color: #667eea;
- }
+ .footer-content a:hover {
+     color: #667eea;  
+     text-decoration: underline;
+}
 
  /* Responsive Design */
  @media (max-width: 768px) {
@@ -400,7 +416,7 @@
      left: 0;
      width: 100%;
      height: 3px;
-     background: linear-gradient(45deg, #667eea, #764ba2);
+     background: linear-gradient(90deg, #5e3ea1 0%, #5e3ea1 20%, #ac4f3b 100%);
      transform: translateX(-100%);
      animation: loading 2s ease-in-out;
      z-index: 9999;
