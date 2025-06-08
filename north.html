@@ -161,172 +161,280 @@
         political crises marked by the erosion of institutional checks, the weakening of electoral integrity, 
         and the concentration of power in the executive. Popular support for leaders who undermine democratic 
         norms remains a significant challenge, often driven by dissatisfaction with traditional political elites 
-        and a desire for stability or reform. At the same time, civic activism, public engaegemtn, and institutional 
+        and a desire for stability or reform. At the same time, civic activism, public engagement, and institutional 
         reforms in parts of the region offer signs of hope, demonstrating that democratic renewal is possible through engaged 
         citizenry and collective action. Overall, the region reflects a broader global trend in which
         democracy is neither assured nor uniformly practiced, but constantly contested and reshaped. </p>
     </div>
-    <script>
-    const map = new maplibregl.Map({
-      container: 'map',
-      style: {
-        version: 8,
-        sources: {
-          'raster-tiles': {
-            type: 'raster',
-            tiles: [
-              'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'],
-            tileSize: 256,
-            attribution: '© OpenStreetMap contributors, © CartoDB'
-          }
-        },
-        layers: [
-          {
-            id: 'simple-tiles',
-            type: 'raster',
-            source: 'raster-tiles',
-            minzoom: 0,
-            maxzoom: 22
-          }
-        ]
+    <div class="slide active" data-country="El Salvador">
+      <h2>El Salvador</h2>
+      <h3>
+        <a href="https://www.journalofdemocracy.org/articles/latin-america-erupts-millennial-authoritarianism-in-el-salvador/"
+          target="_blank">
+          Latin America Erupts: Millennial Authoritarianism in El Salvador </a>
+      </h3>
+      <p>
+       Discusses President Nayib Bukele’s use of a legislative supermajority to dismiss the country’s 
+       highest court and top prosecutor, deepening El Salvador’s 
+       democratic crisis and highlighting a blend of populist and authoritarian tactics.
+      </p>
+      <br>
+      <h3>
+        <a href="https://www.researchgate.net/publication/363393850_Nayib_Bukele_populism_and_autocratization_or_a_very_popular_democratically_elected_president"
+          target="_blank">
+          Nayib Bukele: populism and autocratization, or a very popular democratically elected president?</a>
+      </h3>
+      <p>
+      Analyzes Bukele’s presidency as a case of populism and autocratization, 
+      noting actions that have contributed to democratic backsliding and the erosion of pluralism and civil society.
+      </p>
+    </div> 
+    <div class="slide" data-country="Nicaragua">
+      <h2>Nicaragua</h2>
+      <h3>
+        <a href="https://carnegieendowment.org/posts/2021/11/nicaraguas-farcical-election-marks-consolidation-of-ortegas-autocracy?lang=en"
+        target="_blank">
+          Nicaragua's Farcical Election Marks Consolidation of Ortega's Autocracy</a>
+      </h3>
+      <p>
+        Details President Daniel Ortega’s consolidation of power, the suppression of opposition, and 
+        the broader erosion of democracy in Nicaragua, setting a precedent for authoritarianism in the region.</p>
+    </div>
+    <div class="slide" data-country="Haiti">
+      <h2>Haiti</h2>
+      <h3>
+        <a href="https://www.uusc.org/let-democracy-triumph-in-haiti/"
+        target="_blank">
+          Let Democracy Triumph in Haiti</a>
+      </h3>
+      <p>
+        Examines the autocratic tendencies of Haiti’s leadership following the assassination of President Jovenel Moïse, 
+        the unelected status of Prime Minister Ariel Henry, and the ongoing suppression of democratic processes and civil society.
+      </p>
+    </div>
+    <div class="slide" data-country="Mexico">
+      <h2>Mexico</h2>
+      <h3>
+        <a href="https://www.brookings.edu/articles/mexico-takes-another-step-toward-its-authoritarian-past/"
+        target="_blank">
+          Mexico takes another step toward its authoritarian past</a>
+      </h3>
+      <p>
+        Analyzes President López Obrador’s efforts to undermine independent electoral institutions,
+        centralize power, and erode checks and balances, raising concerns about a return to authoritarian practices in Mexico.
+      </p>
+    </div>
+    <div class="slide" data-country="Honduras">
+      <h2>Honduras</h2>
+      <h3>
+        <a href="https://progressive.international/observatory/2021-11-30-honduras-rises-up-to-reclaim-its-democracy/en"
+        target="_blank">
+          Honduras rises up to reclaim its democracy</a>
+      </h3>
+      <p>
+        Covers the 2021 election of Xiomara Castro, highlighting how Hondurans overcame political violence, disinformation, 
+        and attempts at voter suppression to achieve a peaceful democratic transition after years of instability since the 2009 coup.
+      </p>
+      <br>
+      <h3>
+        <a href="https://www.hnn.us/article/a-chance-for-real-democracy-in-honduras"
+        target="_blank">
+          A Chance for Real Democracy in Honduras</a>
+      </h3>
+      <p>
+        Explores the historical context of democracy in Honduras, noting the shift from externally imposed democracy to 
+        increased citizen participation and the significance of recent elections for democratic renewal.
+      </p>
+    </div>
+    <div class="slide" data-country="Dominican Republic">
+      <h2>Dominican Republic</h2>
+      <h3>
+        <a href="https://www.idea.int/blog/explainer-challenges-and-opportunities-dominican-republic-era-luis-abinader"
+        target="_blank">
+          Explainer: Challenges and Opportunities for the Dominican Republic in the Era of Luis Abinader</a>
+      </h3>
+      <p>
+        Analyzes recent improvements in democratic participation, rule of law, and government accountability, 
+        and highlights the country as a positive exception in a region experiencing democratic decline. It also 
+        discusses ongoing reforms and the role of civil society in defending democratic norms.
+      </p>
+      <br>
+      <h3>
+        <a href="https://nvdatabase.swarthmore.edu/node/5063"
+        target="_blank">
+          Dominicans protest suspended elections to defend democracy, 2020</a>
+      </h3>
+      <p>
+        Details the mass protests following the suspension of municipal elections in 2020, emphasizing how 
+        citizen activism and demands for accountability led to electoral reforms and increased transparency in subsequent elections.
+      </p>
+    </div>
+  </div>
+  
+  <script>
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: {
+      version: 8,
+      sources: {
+        'raster-tiles': {
+          type: 'raster',
+          tiles: [
+            'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          attribution: '© OpenStreetMap contributors, © CartoDB'
+        }
       },
-      center: [-95, 20],    // center on North America
-      zoom: 2.5              // zoom level showi N America nicely
-    });
-    const northAmericaBBox = [-130, 0, -50, 50]; // [west, south, east, north]
+      layers: [
+        {
+          id: 'simple-tiles',
+          type: 'raster',
+          source: 'raster-tiles',
+          minzoom: 0,
+          maxzoom: 22
+        }
+      ]
+    },
+    center: [-95, 20],    // center on North America
+    zoom: 2.5              // zoom level showi N America nicely
+  });
+  const northAmericaBBox = [-130, 0, -50, 50]; // [west, south, east, north]
 
 
-    // Add zoom and rotation controls to the map.
-    map.addControl(new maplibregl.NavigationControl({
-      visualizePitch: true,
-      visualizeRoll: true,
-      showZoom: true,
-      showCompass: true
-    }));
+  // Add zoom and rotation controls to the map.
+  map.addControl(new maplibregl.NavigationControl({
+    visualizePitch: true,
+    visualizeRoll: true,
+    showZoom: true,
+    showCompass: true
+  }));
 
-    let geoData = null;
-    let currentIndex = 0;
-    const slides = document.querySelectorAll('.slide');
+  let geoData = null;
+  let currentIndex = 0;
+  const slides = document.querySelectorAll('.slide');
 
-    map.on('load', () => {
-      fetch('data/democracy.geojson')
-        .then(res => res.json())
-        .then(data => {
-          geoData = data;
+  map.on('load', () => {
+    fetch('data/democracy.geojson')
+      .then(res => res.json())
+      .then(data => {
+        geoData = data;
 
-          map.addSource('democracy', {
-            type: 'geojson',
-            data: geoData
-          });
-
-          map.addLayer({
-            id: 'country-fill',
-            type: 'fill',
-            source: 'democracy',
-            paint: {
-              'fill-color': [
-                'match', ['get', 'Democracy_'],
-                'LD', '#756e91',
-                'LD-', '#756e91',
-                'ED', '#b0b1cb',
-                'ED+', '#b0b1cb',
-                'ED-', '#E4E1ED',
-                'EA+', '#D7BDA0',
-                'EA', '#bd7262',
-                'CA', '#ac4f3b',
-                '#cccccc'
-              ],
-              'fill-opacity': 0.9
-            }
-          });
-
-          map.addLayer({
-            id: 'country-border',
-            type: 'line',
-            source: 'democracy',
-            paint: {
-              'line-color': '#e6e6e6',
-              'line-width': 0.5
-            }
-          });
-
-          map.addLayer({
-            id: 'highlight',
-            type: 'line',
-            source: 'democracy',
-            paint: {
-              'line-color': '#000000',
-              'line-width': 4
-            },
-            filter: ['==', 'COUNTRY', '']
-          });
-
-          updateSlide(0);
+        map.addSource('democracy', {
+          type: 'geojson',
+          data: geoData
         });
-    });
 
+        map.addLayer({
+          id: 'country-fill',
+          type: 'fill',
+          source: 'democracy',
+          paint: {
+            'fill-color': [
+              'match', ['get', 'Democracy_'],
+              'LD', '#756e91',
+              'LD-', '#756e91',
+              'ED', '#b0b1cb',
+              'ED+', '#b0b1cb',
+              'ED-', '#E4E1ED',
+              'EA+', '#D7BDA0',
+              'EA', '#bd7262',
+              'CA', '#ac4f3b',
+              '#cccccc'
+            ],
+            'fill-opacity': 0.9
+          }
+        });
 
-    function updateSlide(index) {
-      if (!geoData || index < 0 || index >= slides.length) return;
+        map.addLayer({
+          id: 'country-border',
+          type: 'line',
+          source: 'democracy',
+          paint: {
+            'line-color': '#555',
+            'line-width': 1
+          }
+        });
 
-      slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === index);
+        map.addLayer({
+          id: 'highlight',
+          type: 'line',
+          source: 'democracy',
+          paint: {
+            'line-color': '#000000',
+            'line-width': 4
+          },
+          filter: ['==', 'COUNTRY', '']
+        });
+
+        updateSlide(0);
       });
+  });
 
-      const country = slides[index].dataset.country;
-      currentIndex = index;
 
-      // If it's the "Global" slide, show South America bounding box & clear highlight
-      if (country === "Global") {
-        const northAmericaBBox = [-130, 0, -50, 50];
-        const containerWidth = document.getElementById('story').clientWidth;
-        const offsetX = containerWidth / 4;
-        const offsetY = 0;
+  function updateSlide(index) {
+    if (!geoData || index < 0 || index >= slides.length) return;
 
-        map.setFilter('highlight', ['==', 'COUNTRY', '']); // clear highlight
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
 
-        map.fitBounds(northAmericaBBox, {
-          padding: 100,
-          duration: 1200,
-          offset: [offsetX, offsetY]
-        });
-        return;
-      }
+    const country = slides[index].dataset.country;
+    currentIndex = index;
 
-      // For other countries: highlight and zoom to the country polygon
-      map.setFilter('highlight', ['==', 'COUNTRY', country]);
+    // If it's the "Global" slide, show South America bounding box & clear highlight
+    if (country === "Global") {
+      const northAmericaBBox = [-130, 0, -50, 50];
+      const containerWidth = document.getElementById('story').clientWidth;
+      const offsetX = containerWidth / 4;
+      const offsetY = 0;
 
-      const feature = geoData.features.find(f => f.properties.COUNTRY === country);
-      if (!feature || !feature.geometry) {
-        console.warn("Country not found in geoData:", country);
-        return;
-      }
+      map.setFilter('highlight', ['==', 'COUNTRY', '']); // clear highlight
 
-      try {
-        const bbox = turf.bbox(feature);
-
-        const containerWidth = document.getElementById('story').clientWidth;
-        const offsetX = containerWidth / 4;
-        const offsetY = 0;
-
-        map.fitBounds(bbox, {
-          padding: 100,
-          duration: 1200,
-          offset: [offsetX, offsetY]
-        });
-      } catch (err) {
-        console.warn('Could not fly to', country, err);
-      }
+      map.fitBounds(northAmericaBBox, {
+        padding: 100,
+        duration: 1200,
+        offset: [offsetX, offsetY]
+      });
+      return;
     }
 
+    // For other countries: highlight and zoom to the country polygon
+    map.setFilter('highlight', ['==', 'COUNTRY', country]);
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        updateSlide(currentIndex + 1);
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        updateSlide(currentIndex - 1);
-      }
-    });
-  </script>
+    const feature = geoData.features.find(f => f.properties.COUNTRY === country);
+    if (!feature || !feature.geometry) {
+      console.warn("Country not found in geoData:", country);
+      return;
+    }
+
+    try {
+      const bbox = turf.bbox(feature);
+
+      const containerWidth = document.getElementById('story').clientWidth;
+      const offsetX = containerWidth / 4;
+      const offsetY = 0;
+
+      map.fitBounds(bbox, {
+        padding: 100,
+        duration: 1200,
+        offset: [offsetX, offsetY]
+      });
+    } catch (err) {
+      console.warn('Could not fly to', country, err);
+    }
+  }
+
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      updateSlide(currentIndex + 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      updateSlide(currentIndex - 1);
+    }
+  });
+</script>
+</body>
+
+</html>
