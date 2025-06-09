@@ -215,14 +215,6 @@
     margin-right: auto;
 }
 
-/* Centra las últimas 2 tarjetas ocupando las columnas 1 y 3 */
-.feature-card:nth-child(4) {
-    grid-column: 1; /* Columna 1 */
-}
-
-.feature-card:nth-child(5) {
-    grid-column: 3; /* Columna 3, dejando la columna 2 vacía */
-}
 
  .feature-card {
      background: white;

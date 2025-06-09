@@ -72,6 +72,11 @@
       color: #f1f1f1;
       line-height: 1.6;
     }
+    .slide a {
+      color: #5e3ea1;
+      text-decoration: underline;
+    }
+
 
     .legend {
       position: absolute;
@@ -328,7 +333,7 @@
             id: 'country-fill',
             type: 'fill',
             source: 'democracy',
-            paint: {
+             paint: {
               'fill-color': [
                 'match', ['get', 'Democracy_'],
                 'LD', '#756e91',
@@ -339,7 +344,7 @@
                 'EA+', '#D7BDA0',
                 'EA', '#bd7262',
                 'CA', '#ac4f3b',
-                '#cccccc'
+                '#e6e3e3' // default color for other values
               ],
               'fill-opacity': 0.9
             }
@@ -356,15 +361,15 @@
           });
 
         map.addLayer({
-          id: 'highlight',
-          type: 'line',
-          source: 'democracy',
-          paint: {
-            'line-color': '#000000',
-            'line-width': 4
-          },
-          filter: ['==', 'COUNTRY', '']
-        });
+            id: 'highlight',
+            type: 'line',
+            source: 'democracy',
+            paint: {
+              'line-color': '#e6e6e6',
+              'line-width': 4
+            },
+            filter: ['==', 'COUNTRY', '']
+          });
 
         updateSlide(0);
       });

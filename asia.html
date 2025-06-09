@@ -360,19 +360,19 @@ map.on('load', () => {
         type: 'fill',
         source: 'democracy',
         paint: {
-          'fill-color': [
-            'match', ['get', 'Democracy_'],
-            'LD', '#756e91',
-            'LD-', '#756e91',
-            'ED', '#b0b1cb',
-            'ED+', '#b0b1cb',
-            'ED-', '#E4E1ED',
-            'EA+', '#D7BDA0',
-            'EA', '#bd7262',
-            'CA', '#ac4f3b',
-            '#cccccc'
-          ],
-          'fill-opacity': 0.9
+              'fill-color': [
+                'match', ['get', 'Democracy_'],
+                'LD', '#756e91',
+                'LD-', '#756e91',
+                'ED', '#b0b1cb',
+                'ED+', '#b0b1cb',
+                'ED-', '#DEBFD0',
+                'EA+', '#D7BDA0',
+                'EA', '#bd7262',
+                'CA', '#ac4f3b',
+                '#e6e3e3' // default color for other values
+              ],
+              'fill-opacity': 0.9
         }
       });
 
@@ -388,15 +388,15 @@ map.on('load', () => {
       });
 
       map.addLayer({
-        id: 'highlight',
-        type: 'line',
-        source: 'democracy',
-        paint: {
-          'line-color': '#000000',
-          'line-width': 4
-        },
-        filter: ['==', 'COUNTRY', '']
-      });
+            id: 'highlight',
+            type: 'line',
+            source: 'democracy',
+            paint: {
+              'line-color': '#e6e6e6',
+              'line-width': 4
+            },
+            filter: ['==', 'COUNTRY', '']
+          });
 
       updateSlide(0);
     });
@@ -449,7 +449,7 @@ function updateSlide(index) {
   map.setFilter('highlight', ['==', 'COUNTRY', '']);
   map.fitBounds(southcentralAsiaBBox, {
     padding: 80,
-    maxZoom: 5,
+    maxZoom: 3,
     duration: 1500,
     offset: [offsetX, offsetY]
   });

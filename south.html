@@ -328,7 +328,7 @@
                 'EA+', '#D7BDA0',
                 'EA', '#bd7262',
                 'CA', '#ac4f3b',
-                '#cccccc'
+                '#e6e3e3' // default color for other values
               ],
               'fill-opacity': 0.9
             }
@@ -349,7 +349,7 @@
             type: 'line',
             source: 'democracy',
             paint: {
-              'line-color': '#000000',
+              'line-color': '#e6e6e6',
               'line-width': 4
             },
             filter: ['==', 'COUNTRY', '']
@@ -372,7 +372,7 @@
 
       // If it's the "Global" slide, show South America bounding box & clear highlight
       if (country === "Global") {
-        const southAmericaBBox = [-82, -56, -34, 13];
+        const southAmericaBBox = [-65, -55, -30, 5];
         const containerWidth = document.getElementById('story').clientWidth;
         const offsetX = containerWidth / 4;
         const offsetY = 0;
@@ -400,7 +400,7 @@
         const bbox = turf.bbox(feature);
 
         const containerWidth = document.getElementById('story').clientWidth;
-        const offsetX = containerWidth / 4;
+        const offsetX = -20+ containerWidth / 4;
         const offsetY = 0;
 
         map.fitBounds(bbox, {
