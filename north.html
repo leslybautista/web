@@ -108,8 +108,8 @@
       background-color: #b0b1cb;
     }
 
-    .ed-lower-bound {
-      background-color: #E4E1ED;
+     .ed-lower-bound {
+      background-color: #DEBFD0;
     }
 
     .ea-upper-bound {
@@ -117,7 +117,7 @@
     }
 
     .electoral-autocracy {
-      background-color: #bd7262;
+      background-color: #E1907D;
     }
 
     .closed-autocracy {
@@ -324,26 +324,26 @@
           data: geoData
         });
 
-        map.addLayer({
-          id: 'country-fill',
-          type: 'fill',
-          source: 'democracy',
-          paint: {
-            'fill-color': [
-              'match', ['get', 'Democracy_'],
-              'LD', '#756e91',
-              'LD-', '#756e91',
-              'ED', '#b0b1cb',
-              'ED+', '#b0b1cb',
-              'ED-', '#E4E1ED',
-              'EA+', '#D7BDA0',
-              'EA', '#bd7262',
-              'CA', '#ac4f3b',
-              '#cccccc'
-            ],
-            'fill-opacity': 0.9
-          }
-        });
+          map.addLayer({
+            id: 'country-fill',
+            type: 'fill',
+            source: 'democracy',
+            paint: {
+              'fill-color': [
+                'match', ['get', 'Democracy_'],
+                'LD', '#756e91',
+                'LD-', '#756e91',
+                'ED', '#b0b1cb',
+                'ED+', '#b0b1cb',
+                'ED-', '#DEBFD0',
+                'EA+', '#D7BDA0',
+                'EA', '#bd7262',
+                'CA', '#ac4f3b',
+                '#cccccc'
+              ],
+              'fill-opacity': 0.9
+            }
+          });
 
         map.addLayer({
           id: 'country-border',
