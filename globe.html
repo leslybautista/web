@@ -1,28 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Democracy Globe Visualization</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- stylesheet for navbar -->
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet" />
+
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      font-family: "Helvetica Neue", Arial, sans-serif;
+      width: 100%;
       height: 100%;
-      color: #e7e7e7;
+      font-family: "Helvetica Neue", Arial, sans-serif;
       overflow: hidden;
+      background: #000;
     }
+
     #globeViz {
+      position: absolute;
+      top: 50px;
+      left: 0;
       width: 100vw;
       height: 100vh;
-      position: relative;
-      z-index: 1;
+      z-index: 0;
     }
+
     canvas {
       display: block;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover;
     }
+
+    .globe-header {
+      position: absolute;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: rgba(10, 10, 25, 0.6);
+      padding: 16px 32px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      text-align: center;
+      animation: fadeIn 1.8s ease-out;
+    }
+
+    .globe-header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 2em;
+      color: #6de2ff;
+      text-shadow: 0 0 6px rgba(109, 226, 255, 0.6), 0 0 12px rgba(109, 226, 255, 0.4);
+      margin: 0;
+    }
+
     .tooltip {
       position: fixed;
       display: none;
@@ -32,10 +69,10 @@
       border-radius: 4px;
       font-size: 0.9em;
       z-index: 10000;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
       pointer-events: none;
       max-width: 200px;
     }
+
     .legend {
       position: absolute;
       bottom: 20px;
@@ -46,23 +83,52 @@
       color: #fff;
       font-size: 0.9em;
       z-index: 1000;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
+
     .legend-item {
       display: flex;
       align-items: center;
       margin-bottom: 6px;
     }
+
     .legend-color {
       width: 16px;
       height: 16px;
       margin-right: 8px;
       border-radius: 2px;
     }
+
+    .ticker {
+      overflow: hidden;
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    .ticker-text {
+      display: inline-block;
+      padding-left: 20%;
+      animation: ticker-scroll 15s linear infinite;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      color: #6de2ff;
+      font-size: 1.2em;
+    }
+
+    /* effects for header */
+    @keyframes ticker-scroll {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -20px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
   </style>
-  
 </head>
+
 <body>
+  <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-container">
       <a href="#" class="logo">Democratization vs. Autocratization</a>
@@ -80,8 +146,23 @@
       <button class="mobile-menu-toggle">☰</button>
     </div>
   </nav>
+
+  <!-- header -->
+  <header class="globe-header">
+    <div class="ticker">
+      <div class="ticker-text">
+        <span>One Globe. Different Politics — </span>
+        <span>From Liberal Democracies to Closed Autocracies — </span>
+        <span>Tracking Political Change Worldwide — </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- globe elements-->
   <div id="globeViz"></div>
   <div class="tooltip" id="tooltip"></div>
+
+  <!--legend -->
   <div class="legend" id="legend">
     <div class="legend-item"><div class="legend-color" style="background-color: #756e91"></div>Liberal Democracy</div>
     <div class="legend-item"><div class="legend-color" style="background-color: #b0b1cb"></div>Electoral Democracy</div>
@@ -91,10 +172,13 @@
     <div class="legend-item"><div class="legend-color" style="background-color: #E4E1ED"></div>Autocratization</div>
     <div class="legend-item"><div class="legend-color" style="background-color: #64748b"></div>No Data Available</div>
   </div>
+
+  <!-- globe script using globe.gl-->
   <script src="https://unpkg.com/globe.gl@2.22.2/dist/globe.gl.min.js"></script>
   <script>
     const tooltip = document.getElementById('tooltip');
     const globeContainer = document.getElementById('globeViz');
+
     const categoryColors = {
       LD: '#756e91',
       ED: '#b0b1cb',
@@ -104,6 +188,7 @@
       'ED-': '#E4E1ED',
       DNA: '#64748b'
     };
+
     const categoryLabels = {
       LD: 'Liberal Democracy',
       ED: 'Electoral Democracy',
@@ -113,20 +198,20 @@
       'ED-': 'Autocratization',
       DNA: 'No Data Available'
     };
+
     let currentHover = null;
-    let clickTimeout = null;
+    let clickTimeout;
     let debounceTimeout;
 
     const debounce = (func, wait) => (...args) => {
       clearTimeout(debounceTimeout);
       debounceTimeout = setTimeout(() => func(...args), wait);
     };
-
+    //initiate the globe viz
     const initGlobe = features => {
       const globe = Globe()(globeContainer)
         .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
         .backgroundColor('#000')
-        .showGraticules(false)
         .polygonAltitude(0.006)
         .polygonsTransitionDuration(0)
         .polygonCapColor(f => categoryColors[f.properties.status] || '#444')
@@ -149,33 +234,37 @@
           tooltip.style.top = `${Math.min(event.clientY - 20, window.innerHeight - 50)}px`;
           clickTimeout = setTimeout(() => {
             tooltip.style.display = 'none';
-            tooltip.style.left = '';
-            tooltip.style.top = '';
-            clickTimeout = null;
             currentHover = null;
           }, 2000);
         });
-      const controls = globe.controls();
-      controls.enableZoom = true;
-      controls.minDistance = 200;
-      controls.maxDistance = 400;
+
+      // globe control config  
+      globe.controls().enableZoom = true;
+      globe.controls().minDistance = 200;
+      globe.controls().maxDistance = 400;
+      globe.controls().autoRotate = true;
+      globe.controls().autoRotateSpeed = 0.1;  
+
       globe.polygonsData(features);
     };
 
+    //had to use 2 different geojson as a work-around to the color anomaly
     const loadAndJoinGeoJson = async () => {
       try {
-        const [worldGeoJson, democracyGeoJson] = await Promise.all([
-          fetch('data/world.geojson', { cache: 'force-cache' }).then(res => res.ok ? res.json() : Promise.reject(`World GeoJSON HTTP ${res.status}`)),
-          fetch('data/world_mod.geojson', { cache: 'force-cache' }).then(res => res.ok ? res.json() : Promise.reject(`Democracy GeoJSON HTTP ${res.status}`))
+        const [world, democracy] = await Promise.all([
+          fetch('data/world.geojson').then(res => res.json()),
+          fetch('data/world_mod.geojson').then(res => res.json())
         ]);
-        const democracyMap = new Map(democracyGeoJson.features.map(f => [f.properties.name, f.properties.Democracy_Status]));
-        worldGeoJson.features.forEach(f => {
-          f.properties.status = categoryColors[democracyMap.get(f.properties.name)] ? democracyMap.get(f.properties.name) : 'DNA';
+
+        const statusMap = new Map(democracy.features.map(f => [f.properties.name, f.properties.Democracy_Status]));
+        world.features.forEach(f => {
+          f.properties.status = statusMap.get(f.properties.name) || 'DNA';
         });
-        requestIdleCallback(() => initGlobe(worldGeoJson.features), { timeout: 1000 });
+
+        requestIdleCallback(() => initGlobe(world.features), { timeout: 1000 });
       } catch (err) {
-        console.error('Failed to load GeoJSON files:', err);
-        tooltip.innerHTML = 'Error loading map or democracy data';
+        console.error('GeoJSON loading failed:', err);
+        tooltip.innerHTML = 'Error loading map data';
         tooltip.style.display = 'block';
         tooltip.style.left = '10px';
         tooltip.style.top = '10px';
@@ -191,14 +280,6 @@
 
     document.addEventListener('mousemove', updateTooltip);
     loadAndJoinGeoJson();
-
-    setTimeout(() => {
-      tooltip.innerHTML = 'Test Tooltip';
-      tooltip.style.display = 'block';
-      tooltip.style.left = '100px';
-      tooltip.style.top = '100px';
-      setTimeout(() => tooltip.style.display = 'none', 2000);
-    }, 1000);
   </script>
 </body>
 </html>
