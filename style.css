@@ -326,7 +326,9 @@
      text-decoration: underline;
 }
 
- /* Responsive Design */
+
+
+ /* Responsive Design- Original one */
  @media (max-width: 768px) {
      .mobile-menu-toggle {
          display: block;
@@ -379,6 +381,63 @@
      }
  }
 
+ 
+@media (max-width: 480px) {
+    html, body {
+        overflow-x: hidden;
+    }
+    .hero {
+        padding-top: 80px; /* Adjust to your navbar height */
+    }
+
+    .nav-container,
+    .hero,
+    .hero-content,
+    .section,
+    .footer-content {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .nav-menu {
+        width: 100%;
+    }
+
+    .hero-content h1,
+    .hero-content h2,
+    .hero-content p {
+        margin-left: 0;
+        margin-right: 0;
+        padding: 0 1rem;
+        text-align: center;
+    }
+
+    .cta-button {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+
+    .feature-grid,
+    .concept-grid,
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .map-placeholder {
+        width: 100%;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+
+    .footer-content {
+        padding: 0 1rem;
+        word-break: break-word;
+    }
+}
+
+
+ 
  /* Animations */
  @keyframes fadeInUp {
      from {

@@ -124,6 +124,111 @@
       from { opacity: 0; transform: translate(-50%, -20px); }
       to { opacity: 1; transform: translate(-50%, 0); }
     }
+
+     /* Responsive styles */
+    @media (max-width: 768px) {
+      body {
+        padding-top: 80px;
+        overflow-x: hidden;
+      }
+
+      .globe-header {
+        position: relative;
+        top: 0;
+        width: 100%;
+        font-size: 1em;
+        padding: 12px 16px;
+        text-align: center;
+      }
+
+      .globe-header h1 {
+        font-size: 1.2em;
+      }
+
+      .ticker-text {
+        display: block;
+        font-size: 1em;
+        white-space: nowrap;
+        overflow: hidden;
+        animation: ticker 15s linear infinite;
+        padding: 0;
+      }
+
+      @keyframes ticker {
+        0% {
+          transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+
+      #globeViz {
+        position: relative;
+        align-items: center;
+        height: 40vh;
+        width: 100%;
+        margin-top: 5px;
+        margin: 0 auto;
+        display: block;
+        z-index: 1;
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px 16px;
+        margin-top: 20px;
+        font-size: 0.85em;
+        padding: 10px;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+      }
+
+      .nav-container {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 0 10px;
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+        font-size: 1.5em;
+        color: #6de2ff;
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-left: auto;
+      }
+
+      .nav-menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 1001;
+      }
+
+      .nav-menu.active {
+        display: flex;
+      }
+
+      .nav-link {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #222;
+      }
+    }
+
   </style>
 </head>
 
@@ -174,7 +279,9 @@
   </div>
 
   <!-- globe script using globe.gl-->
+  <script src="mobile_menu_toggle.js"></script>
   <script src="https://unpkg.com/globe.gl@2.22.2/dist/globe.gl.min.js"></script>
+  
   <script>
     const tooltip = document.getElementById('tooltip');
     const globeContainer = document.getElementById('globeViz');
