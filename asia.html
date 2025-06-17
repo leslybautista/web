@@ -363,7 +363,7 @@ map.on('load', () => {
                 'EA+', '#D7BDA0',
                 'EA', '#bd7262',
                 'CA', '#ac4f3b',
-                '#e6e3e3' // default color for other values
+                '#e6e3e3' 
               ],
               'fill-opacity': 0.9
         }
@@ -376,7 +376,7 @@ map.on('load', () => {
             source: 'democracy',
             paint: {
               'line-color': '#e6e6e6',
-              'line-width': 0.5  // I changed the color and width of the borders
+              'line-width': 0.5  
             } 
       });
 
@@ -412,8 +412,7 @@ function updateSlide(index) {
 
   // Zoom slide
   if (country === "Global") {
-    // Zoom to Asia 
-    const asiaBBox = [60, -15, 150, 55]; // [west, south, east, north] Asia
+    const asiaBBox = [60, -15, 150, 55]; 
     
     map.setFilter('highlight', ['==', 'COUNTRY', '']);
     map.fitBounds(asiaBBox, {
