@@ -184,130 +184,156 @@
   </main>
 
   <script src="mobile_menu_toggle.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const mapContainer = document.getElementById('map-container');
-      const loading = document.getElementById('loading');
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const mapContainer = document.getElementById('map-container');
+    const loading = document.getElementById('loading');
 
-      loading.classList.remove('hidden');
+    loading.classList.remove('hidden');
 
-      const map = L.map(mapContainer, {
-        center: [20, 0],
-        zoom: 2,
-        zoomControl: true,
-        scrollWheelZoom: false,
-        zoomSnap: 0.5,
-        zoomDelta: 0.5
-      });
+    const map = L.map(mapContainer, {
+      center: [20, 0],
+      zoom: 2,
+      zoomControl: true,
+      scrollWheelZoom: true,
+      zoomSnap: 0.5,
+      zoomDelta: 0.5,
+      inertia: true,
+      inertiaDeceleration: 3000,
+      keyboard: false,
+      minZoom: 2,     
+      maxZoom: 4
+    });
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://carto.com/">CARTO</a> | <a href="https://openstreetmap.org">OpenStreetMap</a>',
-        subdomains: 'abcd',
-        maxZoom: 19
+    map.setMaxBounds([
+      [-85, -180],
+      [85, 180]
+    ]);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://carto.com/">CARTO</a> | <a href="https://openstreetmap.org">OpenStreetMap</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+
+    const categoryColors = {
+      'LD': '#756e91', 'ED': '#b0b1cb', 'EA': '#bd7262',
+      'CA': '#ac4f3b', 'ED+': '#D7BDA0', 'ED-': '#E4E1ED',
+      'DNA': '#64748b'
+    };
+
+    const categoryLabels = {
+      'LD': 'Liberal Democracy', 'ED': 'Electoral Democracy',
+      'EA': 'Electoral Autocracy', 'CA': 'Closed Autocracy',
+      'ED+': 'Democratization', 'ED-': 'Autocratization',
+      'DNA': 'No Data Available'
+    };
+
+    const defaultStyle = {
+      weight: 1,
+      color: '#ffffff',
+      fillOpacity: 1
+    };
+
+    const style = f => ({
+      fillColor: categoryColors[f.properties["Democracy Status"]] || categoryColors['DNA'],
+      ...defaultStyle
+    });
+
+    let geoJsonLayer;
+
+    try {
+      const response = await fetch('data/MainCountry.geojson');
+      if (!response.ok) throw new Error('Failed to load GeoJSON');
+      const data = await response.json();
+
+      geoJsonLayer = L.geoJSON(data, {
+        style,
+        onEachFeature: (feature, layer) => {
+          const category = feature.properties["Democracy Status"] || 'DNA';
+          const country = feature.properties["Country Name"] || 'Unknown';
+
+          layer.bindPopup(`
+            <div class="p-2">
+              <h3 class="font-semibold text-white">${country}</h3>
+              <p class="text-sm text-slate-300">Democracy Category: ${categoryLabels[category]}</p>
+            </div>`);
+
+          layer.on({
+            mouseover: e => {
+              const layer = e.target;
+              layer.setStyle({ color: '#ffcc00', weight: 3 });
+              if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                layer.bringToFront();
+              }
+            },
+            mouseout: e => {
+              geoJsonLayer.resetStyle(e.target);
+            }
+          });
+        }
       }).addTo(map);
 
-      const categoryColors = {
-        'LD': '#756e91', 'ED': '#b0b1cb', 'EA': '#bd7262', 'CA': '#ac4f3b',
-        'ED+': '#D7BDA0', 'ED-': '#E4E1ED', 'DNA': '#64748b'
+      const legend = L.control({ position: 'bottomright' });
+      legend.onAdd = () => {
+        const div = L.DomUtil.create('div', 'legend');
+        div.innerHTML = '<strong class="block mb-2">Democracy Category</strong>';
+        for (const key in categoryColors) {
+          div.innerHTML += `
+            <div class="legend-item" data-category="${key}">
+              <i style="background:${categoryColors[key]}"></i>
+              <span>${categoryLabels[key]}</span>
+            </div>`;
+        }
+        return div;
       };
+      legend.addTo(map);
 
-      const categoryLabels = {
-        'LD': 'Liberal Democracy', 'ED': 'Electoral Democracy',
-        'EA': 'Electoral Autocracy', 'CA': 'Closed Autocracy',
-        'ED+': 'Democratization', 'ED-': 'Autocratization', 'DNA': 'No Data Available'
-      };
+      L.DomEvent.disableClickPropagation(document.querySelector('.legend'));
 
-      const style = f => ({
-        fillColor: categoryColors[f.properties["Democracy Status"]] || categoryColors['DNA'],
-        weight: 1,
-        color: '#ffffff',
-        fillOpacity: 1
+      mapContainer.addEventListener('click', e => {
+        const item = e.target.closest('.legend-item');
+        const activeCat = mapContainer.dataset.activeCategory;
+
+        if (item) {
+          const category = item.dataset.category;
+          const isSame = activeCat === category;
+          document.querySelectorAll('.legend-item').forEach(el => el.classList.remove('active'));
+
+          if (isSame) {
+            delete mapContainer.dataset.activeCategory;
+            geoJsonLayer.eachLayer(layer => layer.setStyle({ fillOpacity: 1 }));
+          } else {
+            mapContainer.dataset.activeCategory = category;
+            item.classList.add('active');
+            geoJsonLayer.eachLayer(layer => {
+              const matches = layer.feature?.properties["Democracy Status"] === category;
+              layer.setStyle({ fillOpacity: matches ? 1 : 0.2 });
+            });
+          }
+        } else if (e.target.closest('.legend')) {
+          geoJsonLayer.eachLayer(layer => layer.setStyle({ fillOpacity: 1 }));
+          delete mapContainer.dataset.activeCategory;
+          document.querySelectorAll('.legend-item').forEach(el => el.classList.remove('active'));
+        }
       });
 
-      try {
-        const response = await fetch('data/MainCountry.geojson');
-        if (!response.ok) throw new Error('Failed to load GeoJSON');
-        const data = await response.json();
+      window.addEventListener('resize', () => {
+        map.invalidateSize();
+      });
 
-        L.geoJSON(data, {
-          style,
-          onEachFeature: (feature, layer) => {
-            const category = feature.properties["Democracy Status"] || 'DNA';
-            const country = feature.properties["Country Name"] || 'Unknown';
+    } catch (err) {
+      console.error('Error loading map data:', err);
+      mapContainer.innerHTML = `
+        <div class="flex items-center justify-center h-full bg-slate-800 rounded-lg">
+          <p class="text-red-400">Failed to load map data. Please try again later.</p>
+        </div>`;
+    } finally {
+      loading.classList.add('hidden');
+      mapContainer.classList.add('loaded');
+    }
+  });
+</script>
 
-            layer.bindPopup(`
-              <div class="p-2">
-                <h3 class="font-semibold text-white">${country}</h3>
-                <p class="text-sm text-slate-300">Democracy Category: ${categoryLabels[category]}</p>
-              </div>`);
-
-            layer.on({
-              mouseover: e => e.target.setStyle({ fillOpacity: 0.9 }),
-              mouseout: e => {
-                const active = mapContainer.dataset.activeCategory;
-                const cat = e.target.feature.properties['Democracy Status'];
-                e.target.setStyle({ fillOpacity: active && cat !== active ? 0.3 : 0.7 });
-              }
-            });
-          }
-        }).addTo(map);
-
-        const legend = L.control({ position: 'bottomright' });
-        legend.onAdd = () => {
-          const div = L.DomUtil.create('div', 'legend');
-          div.innerHTML = '<strong class="block mb-2">Democracy Category</strong>';
-          for (const key in categoryColors) {
-            div.innerHTML += `
-              <div class="legend-item" data-category="${key}">
-                <i style="background:${categoryColors[key]}"></i>
-                <span>${categoryLabels[key]}</span>
-              </div>`;
-          }
-          return div;
-        };
-        legend.addTo(map);
-
-        mapContainer.addEventListener('click', e => {
-          const item = e.target.closest('.legend-item');
-          if (item) {
-            const category = item.dataset.category;
-            const isActive = mapContainer.dataset.activeCategory === category;
-            document.querySelectorAll('.legend-item').forEach(el => el.classList.remove('active'));
-            if (isActive) {
-              delete mapContainer.dataset.activeCategory;
-              map.eachLayer(layer => {
-                if (layer.feature) layer.setStyle({ fillOpacity: 0.7 });
-              });
-            } else {
-              mapContainer.dataset.activeCategory = category;
-              item.classList.add('active');
-              map.eachLayer(layer => {
-                if (!layer.feature) return;
-                layer.setStyle({
-                  fillOpacity: layer.feature.properties['Democracy Status'] === category ? 0.9 : 0.3
-                });
-              });
-            }
-          } else if (e.target.closest('.legend')) {
-            map.eachLayer(layer => {
-              if (layer.feature) layer.setStyle({ fillOpacity: 0.7 });
-            });
-            delete mapContainer.dataset.activeCategory;
-            document.querySelectorAll('.legend-item').forEach(el => el.classList.remove('active'));
-          }
-        });
-
-      } catch (err) {
-        console.error('Error loading map data:', err);
-        mapContainer.innerHTML = `
-          <div class="flex items-center justify-center h-full bg-slate-800 rounded-lg">
-            <p class="text-red-400">Failed to load map data. Please try again later.</p>
-          </div>`;
-      } finally {
-        loading.classList.add('hidden');
-        mapContainer.classList.add('loaded');
-      }
-    });
-  </script>
 </body>
 </html>
