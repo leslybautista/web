@@ -239,6 +239,16 @@
      margin-bottom: 0.5rem;
  }
 
+ .feature-card .card-content a{
+    color: #002e74;
+    text-decoration: none;
+ }
+
+ .feature-card .card-content a:hover{
+    color: #5e3ea1;
+    text-decoration: none;
+ }
+
  .card-source {
      font-size: 0.9rem;
      color: #888;

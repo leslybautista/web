@@ -286,13 +286,12 @@
           }
         ]
       },
-      center: [-50, -15],    // center on South America
-      zoom: 1.0              // zoom level showing South America nicely
+      center: [-50, -15],   
+      zoom: 1.0             
     });
-    const southAmericaBBox = [-82, -50, -10, 60]; // [west, south, east, north]
+    const southAmericaBBox = [-82, -50, -10, 60]; 
 
 
-    // Add zoom and rotation controls to the map.
     map.addControl(new maplibregl.NavigationControl({
       visualizePitch: true,
       visualizeRoll: true,
@@ -330,7 +329,7 @@
                 'EA+', '#D7BDA0',
                 'EA', '#bd7262',
                 'CA', '#ac4f3b',
-                '#e6e3e3' // default color for other values
+                '#e6e3e3' 
               ],
               'fill-opacity': 0.9
             }
@@ -372,15 +371,13 @@
       const country = slides[index].dataset.country;
       currentIndex = index;
 
-      // If it's the "Global" slide, show South America bounding box & clear highlight
       if (country === "Global") {
         const southAmericaBBox = [-65, -55, -30, 5];
         const containerWidth = document.getElementById('story').clientWidth;
         const offsetX = containerWidth / 4;
         const offsetY = 0;
 
-        map.setFilter('highlight', ['==', 'COUNTRY', '']); // clear highlight
-
+        map.setFilter('highlight', ['==', 'COUNTRY', '']);
         map.fitBounds(southAmericaBBox, {
           padding: 100,
           duration: 1200,
