@@ -218,7 +218,7 @@ body > section#overview.section {
   align-items: center;
 }
 
-.legend {
+.svg-container .legend {
   position: absolute;
   top: 82%; 
   left: 50%;
@@ -233,7 +233,7 @@ body > section#overview.section {
   z-index: 10;
 }
 
-.legend-item {
+.svg-container .legend-item {
   display: flex;
   align-items: center;
   font-size: 0.95rem;
