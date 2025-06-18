@@ -329,7 +329,7 @@ body > section#overview.section {
 
  /* Stats Section */
  .stats-section {
-     background: linear-gradient(90deg, #5e3ea1 0%, #5e3ea1 20%, #ac4f3b 100%);
+     background: linear-gradient(45deg, #5e3ea1 0%, #5e3ea1 20%, #ac4f3b 100%);
      color: white;
      text-align: center;
  }
@@ -383,8 +383,7 @@ body > section#overview.section {
  }
 
  .footer-content {
-     max-width: 1200px;
-     margin: 0;
+    margin: 0;
     font-size: 12px;    
  }
 
@@ -463,7 +462,7 @@ body > section#overview.section {
         overflow-x: hidden;
     }
     .hero {
-        padding-top: 80px; /* Adjust to your navbar height */
+        padding-top: 80px; 
     }
 
     .nav-container,
