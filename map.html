@@ -202,7 +202,7 @@
       inertiaDeceleration: 3000,
       keyboard: false,
       minZoom: 2,     
-      maxZoom: 8
+      maxZoom: 6
     });
 
     map.setMaxBounds([
@@ -218,14 +218,14 @@
 
     const categoryColors = {
       'LD': '#756e91', 'ED': '#b0b1cb', 'EA': '#bd7262',
-      'CA': '#ac4f3b', 'ED+': '#D7BDA0', 'ED-': '#E4E1ED',
-      'DNA': '#64748b'
+      'CA': '#ac4f3b', 'EA+': '#D7BDA0', 'ED-': '#DEBFD0',
+      'DNA': '#ffffff'
     };
 
     const categoryLabels = {
       'LD': 'Liberal Democracy', 'ED': 'Electoral Democracy',
       'EA': 'Electoral Autocracy', 'CA': 'Closed Autocracy',
-      'ED+': 'Democratization', 'ED-': 'Autocratization',
+      'EA+': 'Democratization', 'ED-': 'Autocratization',
       'DNA': 'No Data Available'
     };
 
@@ -250,25 +250,38 @@
       geoJsonLayer = L.geoJSON(data, {
         style,
         onEachFeature: (feature, layer) => {
-          const category = feature.properties["Democracy Status"] || 'DNA';
+          const rawCategory = feature.properties["Democracy Status"];
+          const category = rawCategory ?? 'DNA'; 
+          const categoryLabel = categoryLabels[category] || 'No Data Available';
+
           const country = feature.properties["Country Name"] || 'Unknown';
 
           layer.bindPopup(`
             <div class="p-2">
               <h3 class="font-semibold text-white">${country}</h3>
-              <p class="text-sm text-slate-300">Democracy Category: ${categoryLabels[category]}</p>
+              <p class="text-sm text-slate-300">Democracy Category: ${categoryLabel}</p>
             </div>`);
-
+        
           layer.on({
             mouseover: e => {
               const layer = e.target;
-              layer.setStyle({ color: '#ffcc00', weight: 3 });
-              if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-                layer.bringToFront();
+              const activeCat = mapContainer.dataset.activeCategory;
+              const layerCat = layer.feature?.properties["Democracy Status"];
+
+              if (!activeCat || activeCat === layerCat) {
+                layer.setStyle({ color: '#ffcc00', weight: 3 });
               }
             },
             mouseout: e => {
-              geoJsonLayer.resetStyle(e.target);
+              const layer = e.target;
+              geoJsonLayer.resetStyle(layer);
+
+              //fix for opacity -here
+              const activeCat = mapContainer.dataset.activeCategory;
+              if (activeCat) {
+                const matches = layer.feature?.properties["Democracy Status"] === activeCat;
+                layer.setStyle({ fillOpacity: matches ? 1 : 0.2 });
+              }
             }
           });
         }
